@@ -1,11 +1,22 @@
 #include <stdbool.h>
+#define MAX_EL 10
 
 
 typedef struct
 {
     FILE *fit;
+    int max_errors, max_f;
+    int max_c;
+    int *taula[MAX_EL][MAX_EL];
 }   fit_t;
 
+typedef struct
+{
+    int *taula_j[MAX_EL][MAX_EL];
+    int errors;
+    int encerts;
+    int n_acabar;
+} joc_t;
 /**
  * @brief Carrega dades
  * @param c (E)
@@ -24,7 +35,7 @@ bool llegir_fitxer();
  *
  * @param
  */
-void finalitza();
+bool finalitza();
 /**
  * @brief Verifica la jugada
  * @param c (E)
@@ -47,3 +58,6 @@ void mostrar();
 bool verificar_dades();
 
 bool obrir_fitxer();
+void inicialitzar();
+int max_columnes ();
+int max_files ();

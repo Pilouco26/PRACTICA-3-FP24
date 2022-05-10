@@ -1,115 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "picross.h"
+#include <stdbool.h>
 
 int main()
 {
-    FILE * fit;
-    fit = fopen ( "input.txt", "r");
-    int i, j, x, y, taula[10][10], taula1[10][10], comptador, compta2;
-    int max_f, max_c, max_errors;
-    if (fit== NULL)
-    {
-        printf("Error\n");
-    }
-    else
-    {
-        fscanf(fit,  "%d", &max_f);
-        fscanf(fit,  "%d", &max_c);
-        fscanf(fit,  "%d", &max_errors);
+        fit_t c;
+        joc_t j;
+        inicialitzar(&c);
+        inicialitzarj(&c);
+        if(obrir_fitxer)
+        {
+            obrir_fitxer(&c);
+            mostrar(&c);
+        }
+        else
+        {
 
-               for (i=0; i< max_f; i++)
-               {
-                   for (j=0; j< max_c; j++)
-                   {
-                       fscanf(fit, "%d", &taula[i][j]);
-                       printf("%d ", taula[i][j]);
-                   }
-                   printf("\n");
-               }
-//
-            printf("\n");
-            comptador=0;
-            compta2=0;
-            x=0; y=1; /*freestlye*/
-            printf("   ");
-            for (j=0; j< max_c; j++)
-            {
-                for (i=0; i<max_f+1; i++)
-                {
-                    if(taula[i][j]==1)
-                    {
-                        comptador++;
-                    }
-                    else
-                    {
-                        if (comptador!=0)
-                        {
-                            compta2 = compta2*10+comptador;
-                            comptador=0;
-                        }
-                    }
-                }
-                printf("%d", compta2);
-                taula1[x][y]=compta2; /*freestlye*/
-                y++; /*freestlye*/
-                printf(" ");
-                compta2=0;
-                comptador=0;
-            }
+           printf("AI CARAMBA!");
+        }
+     do
+    { //aqui es on va el joc
+        printf("\n\nSTROLL WDC 2024\n");
+        printf("VOLS CONTINUAR JEFE? \n\nClica la tecla [+] per continuar\t Clica la tecla [0] per abandonar com un bozo \n");
+        scanf("%d", &(j.n_acabar));
+    }while ((!finalitza) || ((j.n_acabar)!=0));
 
-            comptador=0;
-            compta2=0;
-            x=1; y=0; /*freestlye*/
-            printf("\n");
-            for (i=0; i<max_f; i++)
-            {
-               for (j=0; j< max_c+1; j++)
-                {
-                    if(taula[i][j]==1)
-                    {
-                        comptador++;
-                    }
-                    else
-                    {
-                        if (comptador!=0)
-                        {
-                            compta2 = compta2*10+comptador;
-                            comptador=0;
-                        }
-                    }
-                }
-                printf("%d", compta2);
-                taula1[x][y]=compta2; /*freestlye*/
-                x++; /*freestlye*/
-                printf("\n");
-                compta2=0;
-                comptador=0;
-
-            }
-
-            /*a partir d'aquí és freestyle*/
-            printf("\n\n");
-            x=1; y=1;
-            for (i=0; i<max_f; i++)
-            {
-               for (j=0; j< max_c; j++)
-               {
-                   taula1[x][y]=taula[i][j];
-                   y++;
-               }
-               x++;
-            }
-
-
-            for (x=0; x<max_f; x++)
-            {
-               for (y=0; y< max_c; y++)
-               {
-                   printf("%d", taula1[x][y]);
-               }
-            }
-    }
+    printf("\nthx my g, ngl u got us in the first half.");
 
     return 0;
 }
