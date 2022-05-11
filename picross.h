@@ -16,6 +16,7 @@ typedef struct
     int errors;
     int encerts;
     int n_acabar;
+    char nom[10];
 } joc_t;
 /**
  * @brief Carrega dades
