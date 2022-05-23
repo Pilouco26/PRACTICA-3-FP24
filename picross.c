@@ -3,197 +3,268 @@
 #include <stdbool.h>
 #include "picross.h"
 
-bool obrir_fitxer(fit_t *c)
+void carregar_dades(int taula[15][15], int borde_esquerra[15][1], int *max_c, int *max_f, int *max_errors, int *com3)
 {
-
-    bool correcte = true;
-    c->fit = fopen ( "input.txt", "r"); //obra fitxer
-
-    if (c->fit== NULL)
+    int i, j, comptador, compta2, com1, com4;
+    FILE * fit;
+    fit = fopen ( "input.txt", "r");
+    if (fit== NULL)
     {
-        printf("Error\n"); //no hi ha fitxert
-        correcte = false;
+        printf("Error al obrir el fitxer\n");
+
     }
     else
     {
-
-        fscanf(c->fit,  "%d", &(c->max_f)); //llegeix fitxer
-        fscanf(c->fit,  "%d", &(c->max_c));
-        fscanf(c->fit,  "%d", &(c->max_errors));
-
+        fscanf(fit,  "%d", max_f);
+        fscanf(fit,  "%d", max_c);
+        fscanf(fit,  "%d", max_errors);
 
     }
 
-
-
-        for (int i=0; i<(c->max_f); i++)
-        {
-            for (int j=0; j<(c->max_c); j++)
-            {
-                fscanf(c->fit, "%d", &(c->taula[i][j])); //copia les dades a una taula
-
-            }
-        }
-
-    return correcte; //retorna si ha obert el fitxer
-}
-
-void mostrar(fit_t *c, joc_t *g)
-{
-    int i,j, x, y, comptador, compta2;
-    max_files(c); //passa per referencies les dades
-    max_columnes(c);
-
-    //BRUTAL FINS AQUI
-
-    printf("\n");
-    comptador=0;
-    compta2=0;
-    x=0; y=1; /*freestlye*/
-    printf("   ");
-    for (j=0; j<(c->max_c); j++)
+    for (i=0; i< *max_f; i++)
     {
-        for (i=0; i<((c->max_f)+1); i++)
+        for (j=0; j< *max_c; j++)
         {
-            if((c->taula[i][j])==1)
-            {
-                comptador++;
-            }
-            else
-            {
-                if (comptador!=0)
-                {
-                    compta2 = compta2*10+comptador;
-                    comptador=0;
-                }
-            }
-        }
-        //printf("%d", compta2);
-        g->taula_j[x][y]=compta2; /*freestlye*/
-        y++; /*freestlye*/
-        //printf(" ");
-        compta2=0;
-        comptador=0;
-    }
-
-    comptador=0;
-    compta2=0;
-    x=1; y=0; /*freestlye*/
-   // printf("\n");
-
-    for (i=0; i<(c->max_f); i++)
-    {
-        for (j=0; j<((c->max_c)+1); j++)
-        {
-            if((c->taula[i][j])==1)
-            {
-                comptador++;
-            }
-            else
-            {
-                if (comptador!=0)
-                {
-                    compta2 = compta2*10+comptador;
-                    comptador=0;
-                }
-            }
-        }
-        (g->taula_j[x][y])=compta2; /*freestlye*/
-        x++; /*freestlye*/
-       // printf("\n");
-        compta2=0;
-        comptador=0;
-
-    }
-
-            /*a partir d'aquí és freestyle*/
-    printf("\n");
-    x=1; y=1;
-    for (i=0; i<(c->max_f); i++)
-    {
-        for (j=0; j<(c->max_c); j++)
-        {
-            (g->taula_j[i+1][j+1])=(c->taula[i][j]);
-            y++;
-        }
-        x++;
-    }
-
-
-    for (i=0; i<(c->max_f+1); i++)
-    {
-        for (j=0; j<(c->max_c+1); j++)
-        {
-            if((g->taula_j[i][0])<10)
-            {
-                printf("%d  ", (g->taula_j[i][j]));
-            }
-            else
-            {
-                printf("%d ", (g->taula_j[i][j]));
-            }
-
+            fscanf(fit, "%d", &taula[i][j]);
+            printf("%d ", taula[i][j]);
         }
         printf("\n");
     }
-}
 
-int max_files (fit_t *c)
-{
-    return(c->max_f);
-}
+    comptador=0;
+    compta2=0;
+    com4=0;
+    com1=0;
 
-int max_columnes (fit_t *c)
-{
-    return(c->max_c);
-}
-
-
-
-void inicialitzar(fit_t *c)
-{
-     c->max_f=0; //INICIATLITZA
-     c->max_c=0;
-
-}
-void inicialitzarj(joc_t *g)
-{
-     g->n_acabar=0;
-     g->encerts=0;
-     g->errors=0; //INICIATLITZA
-
-}
-
-bool finalitza(joc_t *g, fit_t *c)
-{
-    bool r= false;
-    printf("VOLS CONTINUAR JEFE? \n\nClica la tecla [+] per continuar\t Clica la tecla [0] per abandonar com un bozo \n");
-    scanf("%d", &(g->n_acabar));
-    if((g->n_acabar)==0)
+    for (i=0; i<*max_f; i++)
     {
-        bool r=true;
-        printf("\nthx my g, ngl u got us in the first half.");
+        for (j=0; j< *max_c+1; j++)
+        {
+            if(taula[i][j]==1)
+            {
+                comptador++;
+            }
+            else
+            {
+                if (comptador!=0)
+                {
+                    compta2 = compta2*10+comptador;
+                    comptador=0;
+                    com1++;
+                }
+            }
+        }
+        borde_esquerra[i][0]=compta2;
+        compta2=0;
+        comptador=0;
+        if(com4<com1) com4=com1;
+        com1=0;
     }
-    if((g->errors)>=(c->max_errors))
-    {
-        bool r=true;
-        printf("has superat el maxim d'erros. Tbf has de ser completament retrasat per-ho :/. shmmm");
-    }
-    if((g->encerts)==25)
-    {
-        bool r=true;
-        printf("GG. Time to touch grass ");
-    }
-    return r;
+    *com3=com4;
+    printf("%d", *com3);
+
 }
-void presentacio(joc_t *g)
+void iniciar_taula_adalt(int taula[15][15], int taula1[15][15], int max_c, int max_f, int max_errors, int com2)
 {
-    printf("Hola, Benvingut al Mundial del 2022 de PICROSS\n");
-    printf("----------------------------------------------\n");
-    printf("----------------------------------------------\n");
-    printf("----------------------------------------------\n");
-    printf("----------------------------------------------\n");
-    printf("Abans de tot volem saber quin és el teu nom, com et dius?\n");
-    scanf("%s", &(g->nom));
-    printf("gucci %s, vamos a darle que renta mazo aquest joc!", (g->nom));
+    int x, y, i, j, comptador, com1;
+
+     for (x=0; x<com2; x++)
+            {
+                for (y=0; y<max_f; y++)
+                {
+                    taula1[x][y]= 0;
+                }
+            }
+
+            comptador=0;
+            com1=0;
+            com2=0;
+            x=0;  y=0;
+            for (j=0; j< max_c+1; j++)
+            {
+               // comptador=0;
+                x=0;
+                for (i=0; i<max_f+1; i++)
+                {
+                    if(taula[i][j]==1)
+                    {
+                        comptador++;
+                    }
+                    else
+                    {
+                        if (comptador!=0)
+                        {
+                            taula1[x][y]= comptador;
+                            x++;
+                            comptador=0;
+                            com1++;
+                        }
+                    }
+                }
+                y++;
+
+                if(com2<com1) com2=com1;
+                com1=0;
+                }
+                printf("%d \n", com2);
+
+           /*for (x=0; x<3; x++)
+            {
+                printf("\n      ");
+                for(y=0; y<max_f; y++)
+                {
+                    if (taula1[x][y]!=0) printf("%d ", taula1[x][y]);
+                }
+                printf("\n ");
+             }*/
+
+             for(y=0; y<max_f; y++)
+             {
+
+                 for(x=0; x<com2; x++)
+                 {
+                     if(taula1[x][y]!=0)printf("%d ", taula1[x][y]);
+
+                 }
+
+             }
+}
+
+void iniciar_taula_respostes(char taula_respostes[15][15], int max_c, int max_f)
+{
+    int i, j;
+    for (i=0; i<max_f; i++)
+            {
+                for (j=0; j<max_c+1; j++)
+                {
+                    taula_respostes[i][j]='X'; /*omple tota la taula amb el caràcter X*/
+                }
+            }
+}
+
+void imprimir_taula_respostes(int *com3, int borde_esquerra[15][1], char taula_respostes[15][15], int max_c, int max_f )
+{
+    printf("\n");
+    printf("%d", *com3);
+    int com5=*com3;
+    int i, j, k;
+    for (i=0; i<max_f; i++)
+        {
+            for (j=0; j<max_c; j++)
+            {
+                if (j==0)
+                {
+
+                    if (borde_esquerra[i][j]<10)
+                        {
+                            printf ("%d", borde_esquerra[i][j]);
+                            for(k=0; k<com5; k++)
+                            {
+                                printf(" ");
+                            }
+                            printf("|");
+                        }
+                    else
+                    {
+                        if (borde_esquerra[i][j]<100)
+                        {
+                            printf ("%d", borde_esquerra[i][j]);
+                            for(k=0; k<com5-1; k++)
+                            {
+                                printf(" ");
+                            }
+                            printf("|");
+                        }
+                        else if (borde_esquerra[i][j]<1000)
+                        {
+                            printf ("%d", borde_esquerra[i][j]);
+                            for(k=0; k<com5-2; k++)
+                            {
+                                printf(" ");
+                            }
+                            printf("|");
+                        }
+                        else if (borde_esquerra[i][j]<10000)
+                        {
+                            printf ("%d", borde_esquerra[i][j]);
+                            for(k=0; k<com5-3; k++)
+                            {
+                                printf(" ");
+                            }
+                            printf("|");
+                        }
+                        else
+                        {
+                           printf ("%d", borde_esquerra[i][j]);
+                            for(k=0; k<com5-4; k++)
+                            {
+                                printf(" ");
+                            }
+                            printf("|");
+                        }
+
+                    }
+                }
+                    printf(" %c", taula_respostes[i][j]);
+            }
+            printf(" |\n");
+        }
+    printf("\n");
+}
+
+void pregunta_posicio(int *fila, int *columna, int max_c, int max_f)
+{
+    printf("Tria una fila del 1 i al %d\n", max_f);
+    scanf("%d", fila);
+    while ((*fila<1)||(*fila>max_f))
+    {
+        printf("Fila no valida, tria una fila del 1 i al %d\n", max_f);
+        scanf("%d", fila);
+    }
+
+    *fila= *fila-1;
+
+    printf("Tria una columna del 1 i al %d\n", max_c);
+    scanf("%d", columna);
+    while ((*columna<1)||(*columna>max_c))
+    {
+        printf("Columna no valida, tria una columna del 1 i al %d\n", max_c);
+        scanf("%d", columna);
+    }
+    *columna= *columna-1;
+}
+
+bool posicio_omplerta (char taula_respostes[15][15], int fila, int columna)
+{
+    bool omplert=false;
+
+    if ((taula_respostes[fila][columna]=='0') || (taula_respostes[fila][columna]=='1'))
+    {
+        omplert=true;
+    }
+
+    return omplert;
+}
+
+void pregunta_resposta(int *resposta)
+{
+
+    printf("Escriu la teva resposta\n");
+    scanf("%d", resposta);
+    while ((*resposta!=0)&&(*resposta!=1))
+    {
+        printf("Resposta no valida, recorda que la resposta nomes pot ser un 1 o un 0\n");
+        scanf("%d", resposta);
+    }
+}
+
+bool resposta_ok(int taula[15][15], int fila, int columna, int resposta, char taula_respostes[15][15])
+{
+    bool correcte=false;
+    if (resposta==taula[fila][columna])
+    {
+        correcte=true;
+        taula_respostes[fila][columna]=resposta+'0';
+    }
+    return correcte;
 }
