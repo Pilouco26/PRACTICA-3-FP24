@@ -35,7 +35,7 @@ void carregar_dades(int taula[10][10], int borde_esquerra[10][1], int *max_c, in
 
     for (i=0; i<*max_f; i++)
     {
-        for (j=0; j< *max_c+1; j++)
+        for (j=0; j<*max_c+1; j++)
         {
             if(taula[i][j]==1)
             {
@@ -202,7 +202,7 @@ int main()
     }
     else
     {
-        printf("GG nigga\n");
+        printf("GG\n");
     }
 
     return 0;
