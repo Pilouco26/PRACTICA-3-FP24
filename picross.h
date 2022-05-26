@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX_EL 10
-
+typedef struct
+{
+    int *com3;
+}com_t;
 /**
  * @brief Carrega dades
  * @param c (E)

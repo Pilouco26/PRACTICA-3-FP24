@@ -3,7 +3,9 @@
 #include <stdbool.h>
 #include "picross.h"
 
-void carregar_dades(int taula[15][15], int borde_esquerra[15][1], int *max_c, int *max_f, int *max_errors, int *com3)
+
+
+void carregar_dades(int taula[15][15], int borde_esquerra[15][1], int *max_c, int *max_f, int *max_errors, com_t *c )
 {
     int i, j, comptador, compta2, com1, com4;
     FILE * fit;
@@ -60,8 +62,7 @@ void carregar_dades(int taula[15][15], int borde_esquerra[15][1], int *max_c, in
         if(com4<com1) com4=com1;
         com1=0;
     }
-    *com3=com4;
-    printf("%d", *com3);
+    c->com3=com4;
 
 }
 void iniciar_taula_adalt(int taula[15][15], int taula1[15][15], int max_c, int max_f, int max_errors, int com2)
@@ -108,16 +109,6 @@ void iniciar_taula_adalt(int taula[15][15], int taula1[15][15], int max_c, int m
                 }
                 printf("%d \n", com2);
 
-           /*for (x=0; x<3; x++)
-            {
-                printf("\n      ");
-                for(y=0; y<max_f; y++)
-                {
-                    if (taula1[x][y]!=0) printf("%d ", taula1[x][y]);
-                }
-                printf("\n ");
-             }*/
-
              for(y=0; y<max_f; y++)
              {
 
@@ -142,11 +133,10 @@ void iniciar_taula_respostes(char taula_respostes[15][15], int max_c, int max_f)
             }
 }
 
-void imprimir_taula_respostes(int *com3, int borde_esquerra[15][1], char taula_respostes[15][15], int max_c, int max_f )
+void imprimir_taula_respostes(int borde_esquerra[15][1], char taula_respostes[15][15], int max_c, int max_f, com_t c )
 {
     printf("\n");
-    printf("%d", *com3);
-    int com5=*com3;
+    int com5=c.com3;
     int i, j, k;
     for (i=0; i<max_f; i++)
         {
