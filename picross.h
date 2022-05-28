@@ -1,60 +1,34 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX_EL 10
+#include <stdbool.h>
+#define MAX 100
+
 typedef struct
 {
-    int *com3;
-}com_t;
-/**
- * @brief Carrega dades
- * @param c (E)
- */
-void carregar_dades();
-/**
- * @brief Acaba el joc
- *
- * @param
- */
-void iniciar_taula_respostes();
-/**
- * @brief Verifica la jugada
- * @param c (E)
- * @return true Encerta
- * @return false Puzolana
- */
- void iniciar_taula_adalt();
- /**
- * @brief Verifica la jugada
- * @param c (E)
- * @return true Encerta
- * @return false Puzolana
- */
- void imprimir_taula_respostes();
-/**
- * @brief Ensenya el tauler  del picross
- *
- * @param (E) El tauler
- */
-void pregunta_posicio();
-/**
- * @brief Carrega dades
- * @param c (E)
- * @return true Si l'usuari ha introduit dades valides
- * @return false Al revès
- */
-bool posicio_omplerta();
-/**
- * @brief Carrega dades
- * @param c (E)
- * @return true Si l'usuari ha introduit dades valides
- * @return false Al revès
- */
-void pregunta_resposta();
-/**
- * @brief Carrega dades
- * @param c (E)
- * @return true Si l'usuari ha introduit dades valides
- * @return false Al revès
- */
-bool resposta_ok();
+    int taula[MAX][MAX];
+    int taula1[MAX][MAX];
+    int taula2[MAX][MAX];
+    int max_c;
+    int max_f;
+    int max_errors;
+    int n;
+    int fila;
+    int columna;
+    int resposta;
+    char taula_respostes[MAX][MAX];
+
+} picross_t;
+
+void carregar_dades(picross_t *p);
+
+void taula_adalt(picross_t *p);
+
+void imprimir_taula_respostes(picross_t *p);
+
+void pregunta_posicio(picross_t *p);
+
+bool posicio_omplerta (picross_t *p);
+
+bool resposta_ok(picross_t *p);
+
+void pregunta_resposta(picross_t *p);

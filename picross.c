@@ -1,93 +1,58 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "picross.h"
 
-
-
-void carregar_dades(int taula[15][15], int borde_esquerra[15][1], int *max_c, int *max_f, int *max_errors, com_t *c )
+void carregar_dades(picross_t *p)
 {
-    int i, j, comptador, compta2, com1, com4;
     FILE * fit;
-    fit = fopen ( "input.txt", "r");
+    fit = fopen ("input.txt", "r");
+    int i, j;
     if (fit== NULL)
     {
         printf("Error al obrir el fitxer\n");
-
     }
     else
     {
-        fscanf(fit,  "%d", max_f);
-        fscanf(fit,  "%d", max_c);
-        fscanf(fit,  "%d", max_errors);
+        fscanf(fit,  "%d", &p->max_f);
+        fscanf(fit,  "%d", &p->max_c);
+        fscanf(fit,  "%d", &p->max_errors);
 
+              for (i=0; i< p->max_f; i++)
+               {
+                   for (j=0; j< p->max_c; j++)
+                   {
+                       fscanf(fit, "%d", &p->taula[i][j]);
+                      // printf("%d ", p->taula[i][j]);
+                   }
+               }
     }
-
-    for (i=0; i< *max_f; i++)
-    {
-        for (j=0; j< *max_c; j++)
-        {
-            fscanf(fit, "%d", &taula[i][j]);
-            printf("%d ", taula[i][j]);
-        }
-        printf("\n");
-    }
-
-    comptador=0;
-    compta2=0;
-    com4=0;
-    com1=0;
-
-    for (i=0; i<*max_f; i++)
-    {
-        for (j=0; j< *max_c+1; j++)
-        {
-            if(taula[i][j]==1)
-            {
-                comptador++;
-            }
-            else
-            {
-                if (comptador!=0)
-                {
-                    compta2 = compta2*10+comptador;
-                    comptador=0;
-                    com1++;
-                }
-            }
-        }
-        borde_esquerra[i][0]=compta2;
-        compta2=0;
-        comptador=0;
-        if(com4<com1) com4=com1;
-        com1=0;
-    }
-    c->com3=com4;
 
 }
-void iniciar_taula_adalt(int taula[15][15], int taula1[15][15], int max_c, int max_f, int max_errors, int com2)
+void taula_adalt(picross_t *p)
 {
-    int x, y, i, j, comptador, com1;
+     int x, y, j, i, comptador;
 
-     for (x=0; x<com2; x++)
+     p->n = p->max_f/2+1;
+//COMPTADOR DE LES COLUMNES AMB ELS RESULTATS
+           for (x=0; x< p->max_f; x++)
             {
-                for (y=0; y<max_f; y++)
+                for (y=0; y<p->max_c; y++)
                 {
-                    taula1[x][y]= 0;
+                    p->taula1[x][y]= 0;
                 }
             }
 
             comptador=0;
-            com1=0;
-            com2=0;
             x=0;  y=0;
-            for (j=0; j< max_c+1; j++)
+            for (j=0; j< p->max_c+1; j++)
             {
                // comptador=0;
-                x=0;
-                for (i=0; i<max_f+1; i++)
+                x= p->n;
+                for (i=0; i<p->max_f+1; i++)
                 {
-                    if(taula[i][j]==1)
+                    if(p->taula[i][j]==1)
                     {
                         comptador++;
                     }
@@ -95,140 +60,177 @@ void iniciar_taula_adalt(int taula[15][15], int taula1[15][15], int max_c, int m
                     {
                         if (comptador!=0)
                         {
-                            taula1[x][y]= comptador;
-                            x++;
+                            p->taula1[x][y]= comptador;
+                            x--;
                             comptador=0;
-                            com1++;
                         }
                     }
                 }
                 y++;
-
-                if(com2<com1) com2=com1;
-                com1=0;
-                }
-                printf("%d \n", com2);
-
-             for(y=0; y<max_f; y++)
-             {
-
-                 for(x=0; x<com2; x++)
-                 {
-                     if(taula1[x][y]!=0)printf("%d ", taula1[x][y]);
-
-                 }
-
-             }
-}
-
-void iniciar_taula_respostes(char taula_respostes[15][15], int max_c, int max_f)
-{
-    int i, j;
-    for (i=0; i<max_f; i++)
-            {
-                for (j=0; j<max_c+1; j++)
-                {
-                    taula_respostes[i][j]='X'; /*omple tota la taula amb el caràcter X*/
-                }
             }
-}
+            //PRINTEM ELS RESULTATS
 
-void imprimir_taula_respostes(int borde_esquerra[15][1], char taula_respostes[15][15], int max_c, int max_f, com_t c )
-{
-    printf("\n");
-    int com5=c.com3;
-    int i, j, k;
-    for (i=0; i<max_f; i++)
-        {
-            for (j=0; j<max_c; j++)
+           for (x= p->n; x>0; x--)
             {
-                if (j==0)
+                printf("\n");
+                for(int k=0; k< p->n+2; k++ )
                 {
-
-                    if (borde_esquerra[i][j]<10)
-                        {
-                            printf ("%d", borde_esquerra[i][j]);
-                            for(k=0; k<com5; k++)
-                            {
-                                printf(" ");
-                            }
-                            printf("|");
-                        }
+                     printf(" ");
+                }
+                for(y=0; y<p->max_c; y++)
+                {
+                    if (p->taula1[x][y]!=0)
+                    {
+                        printf("%d ", p->taula1[x][y]);
+                    }
                     else
                     {
-                        if (borde_esquerra[i][j]<100)
-                        {
-                            printf ("%d", borde_esquerra[i][j]);
-                            for(k=0; k<com5-1; k++)
-                            {
-                                printf(" ");
-                            }
-                            printf("|");
-                        }
-                        else if (borde_esquerra[i][j]<1000)
-                        {
-                            printf ("%d", borde_esquerra[i][j]);
-                            for(k=0; k<com5-2; k++)
-                            {
-                                printf(" ");
-                            }
-                            printf("|");
-                        }
-                        else if (borde_esquerra[i][j]<10000)
-                        {
-                            printf ("%d", borde_esquerra[i][j]);
-                            for(k=0; k<com5-3; k++)
-                            {
-                                printf(" ");
-                            }
-                            printf("|");
-                        }
-                        else
-                        {
-                           printf ("%d", borde_esquerra[i][j]);
-                            for(k=0; k<com5-4; k++)
-                            {
-                                printf(" ");
-                            }
-                            printf("|");
-                        }
-
+                        printf("  ");
                     }
                 }
-                    printf(" %c", taula_respostes[i][j]);
-            }
-            printf(" |\n");
-        }
-    printf("\n");
-}
+             }
 
-void pregunta_posicio(int *fila, int *columna, int max_c, int max_f)
+}
+void iniciar_taula_respostes(picross_t *p)
 {
-    printf("Tria una fila del 1 i al %d\n", max_f);
-    scanf("%d", fila);
-    while ((*fila<1)||(*fila>max_f))
-    {
-        printf("Fila no valida, tria una fila del 1 i al %d\n", max_f);
-        scanf("%d", fila);
-    }
+       for (int i=0; i<p->max_f; i++)
+            {
+                for (int j=0; j< p->max_c+((p->n)+1); j++)
+                {
+                    p->taula_respostes[i][j]='X'; //omple tota la taula amb el caràcter X
+                }
 
-    *fila= *fila-1;
+            }
+}
+void fer_taula(picross_t *p)
+{
+            printf("\n");
+            int i,j;
+            i=0;
+             for (int x=0; x<p->max_f; x++)
+            {
+                j=0;
+                for (int y=0; y<p->max_c+p->n+1; y++)
+                {
+                    if (p->taula2[x][y]!= 0)
+                    {
+                        if(y< p->n)
+                        {
+                           printf ("%d", p->taula2[x][y]);
+                        }
+                    }
+                     else
+                    {
+                        printf(" ");
+                        if(y> p->n)
+                        {
+                            printf("%c", p->taula_respostes[i][j]);
+                            j++;
+                        }
+                    }
+                }
+                printf("\n");
+            i++;
+            }
 
-    printf("Tria una columna del 1 i al %d\n", max_c);
-    scanf("%d", columna);
-    while ((*columna<1)||(*columna>max_c))
-    {
-        printf("Columna no valida, tria una columna del 1 i al %d\n", max_c);
-        scanf("%d", columna);
-    }
-    *columna= *columna-1;
+}
+void imprimir_taula_respostes(picross_t *p)
+{
+        //GUARDEM ZEROS A LA TAULA//
+        int x, y, i, j, comptador;
+              for ( x=0; x< p->max_f; x++)
+            {
+                for ( y=0; y<p->max_c; y++)
+                {
+                    p->taula2[x][y]= 0;
+                }
+            }
+//COMPTADOR DEL RESULTAT DE LES COLUMNES
+            comptador=0;
+             x=0;
+             y=0;
+             for ( i=0; i < p->max_f+1; i++)
+            {
+
+                y=0;
+                for ( j=0; j < p->max_c+1; j++)
+                {
+                    if(p->taula[i][j]==1)
+                    {
+                        comptador++;
+                    }
+                    else
+                    {
+                        if (comptador!=0)
+                        {
+                            p->taula2[x][y]= comptador;
+                            y++;
+                            comptador=0;
+                        }
+                    }
+                }
+                x++;
+            }
+             printf("\n");
+
+/*
+             i=0;
+             for ( x=0; x<p->max_f; x++)
+            {
+                j=0;
+                for ( y=0; y<p->max_c+p->n+1; y++)
+                {
+                    if (p->taula2[x][y]!= 0)
+                    {
+                        if(y< p->n)
+                       {
+                           printf ("%d", p->taula2[x][y]);
+                       }
+                    }
+                     else
+
+                        {
+                            printf(" ");
+                             if(y> p->n)
+                            {
+                                printf("%c", p->taula_respostes[i][j]);
+                            }
+                        }
+                }
+                j++;
+                printf("\n");
+
+            }
+            i++;*/
 }
 
-bool posicio_omplerta (char taula_respostes[15][15], int fila, int columna)
+void pregunta_posicio(picross_t *p)
+{
+    printf("\nTria una fila del 1 i al %d\n", p->max_f);
+    scanf("%d", &p->fila);
+    while ((p->fila<1)||(p->fila> p->max_f))
+    {
+        printf("\nFila no valida, tria una fila del 1 i al %d\n", p->max_f);
+        scanf("%d", &p->fila);
+    }
+
+    p->fila= p->fila-1;
+
+    printf("\nTria una columna del 1 i al %d\n", p->max_c);
+    scanf("%d", &p->columna);
+    while ((p->columna<1)||(p->columna>p->max_c))
+    {
+        printf("\nColumna no valida, tria una columna del 1 i al %d\n", p->max_c);
+        scanf("%d", &p->columna);
+    }
+    p->columna= p->columna-1;
+}
+
+bool posicio_omplerta (picross_t *p)
 {
     bool omplert=false;
 
-    if ((taula_respostes[fila][columna]=='0') || (taula_respostes[fila][columna]=='1'))
+    if ((p->taula_respostes[p->fila][p->columna]=='0') || (p->taula_respostes[p->fila][p->columna]=='1'))
     {
         omplert=true;
     }
@@ -236,25 +238,26 @@ bool posicio_omplerta (char taula_respostes[15][15], int fila, int columna)
     return omplert;
 }
 
-void pregunta_resposta(int *resposta)
+void pregunta_resposta(picross_t *p)
 {
 
-    printf("Escriu la teva resposta\n");
-    scanf("%d", resposta);
-    while ((*resposta!=0)&&(*resposta!=1))
+    printf("\nEscriu la teva resposta\n");
+    scanf("%d", &p->resposta);
+    while ((p->resposta!=0)&&(p->resposta!=1))
     {
-        printf("Resposta no valida, recorda que la resposta nomes pot ser un 1 o un 0\n");
-        scanf("%d", resposta);
+        printf("\nResposta no valida, recorda que la resposta nomes pot ser un 1 o un 0\n");
+        scanf("%d", &p->resposta);
     }
 }
 
-bool resposta_ok(int taula[15][15], int fila, int columna, int resposta, char taula_respostes[15][15])
+bool resposta_ok(picross_t *p)
 {
     bool correcte=false;
-    if (resposta==taula[fila][columna])
+    if (p->resposta==p->taula[p->fila][p->columna])
     {
         correcte=true;
-        taula_respostes[fila][columna]=resposta+'0';
+        p->taula_respostes[p->fila][p->columna]= p->resposta+ '0';
+
     }
     return correcte;
 }

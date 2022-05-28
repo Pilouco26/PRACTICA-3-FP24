@@ -3,54 +3,64 @@
 #include <stdbool.h>
 #include "picross.h"
 
-
 int main()
 {
-    int taula[15][15], taula1[15][15], borde_esquerra[15][1], resposta, encerts, errors, max_errors, max_f, max_c, fila, columna, com3;
-    char taula_respostes[15][15];
 
-    com_t c;
-    encerts=0;
-    errors=0;
+    picross_t p;
+    int encerts=0;
+    int errors=0;
+    printf("\nBenvingut al joc del Picross:\n");
+    carregar_dades(&p);
+    taula_adalt(&p);
+    iniciar_taula_respostes(&p);
+    imprimir_taula_respostes(&p);
+    fer_taula(&p);
+    printf("\nTenint en compte que la primera fila correspon al numero 1, i que la primera columna correspon tambe al numero 1.\n");
 
-    carregar_dades(taula, borde_esquerra, &max_c, &max_f, &max_errors, &c);
-    iniciar_taula_respostes(taula_respostes, max_c, max_f);
-    printf("Tenint en compte que la primera fila correspon al numero 1, i que la primera columna correspon tambe al numero 1\n");
 
-
-    while((errors<max_errors)&&(encerts<max_f*max_c))
+    while((errors<p.max_errors)&&(encerts<p.max_f*p.max_c))
     {
-        iniciar_taula_adalt(taula, taula1, max_c, max_f);
-        imprimir_taula_respostes(borde_esquerra, taula_respostes, max_c, max_f, c);
-        pregunta_posicio(&fila, &columna, max_c, max_f);
-        while (posicio_omplerta(taula_respostes, fila, columna))
+        taula_adalt(&p);
+        //imprimir_taula_respostes(&p);
+        fer_taula(&p);
+        pregunta_posicio(&p);
+        while (posicio_omplerta(&p)==true)
         {
-            printf("Aquesta posicio ja l'has omplert, torna a triar la posicio\n");
-            pregunta_posicio(&fila, &columna, max_c, max_f);
+            printf("\nAquesta posicio ja l'has omplert, torna a triar la posicio\n");
+            pregunta_posicio(&p);
         }
 
-        pregunta_resposta(&resposta);
+        pregunta_resposta(&p);
 
-        if (resposta_ok(taula, fila, columna, resposta, taula_respostes))
+        if (resposta_ok(&p)==true)
         {
-            printf("Correcte\n");
+            printf("\nCorrecte\n");
             encerts++;
         }
         else
         {
-            printf("error\n");
+            printf("\nError\n");
             errors++;
         }
     }
 
-    if (errors==max_errors)
+    if (errors==p.max_errors)
     {
-        printf("Game over\n");
+        printf("\nGame over!\n");
     }
     else
     {
-        printf("GG nigga\n");
+        printf("Joc completat!\n");
+        for(int i=0; i<p.max_f; i++)
+        {
+            for(int j=0; j<p.max_c; j++)
+            {
+                printf("%d ", p.taula[i][j]);
+            }
+            printf("\n");
+        }
     }
+
 
     return 0;
 }
