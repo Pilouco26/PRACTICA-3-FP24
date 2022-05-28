@@ -32,3 +32,5 @@ bool posicio_omplerta (picross_t *p);
 bool resposta_ok(picross_t *p);
 
 void pregunta_resposta(picross_t *p);
+
+bool finalitza(int encerts, int errors, picross_t p);

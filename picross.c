@@ -7,7 +7,7 @@
 void carregar_dades(picross_t *p)
 {
     FILE * fit;
-    fit = fopen ("input.txt", "r");
+    fit = fopen ("input.txt", "r"); //OBTÉ EL FITXER
     int i, j;
     if (fit== NULL)
     {
@@ -15,7 +15,7 @@ void carregar_dades(picross_t *p)
     }
     else
     {
-        fscanf(fit,  "%d", &p->max_f);
+        fscanf(fit,  "%d", &p->max_f); //SCANEJA FILES, COLUMNES I MAXIM D'ERRORS
         fscanf(fit,  "%d", &p->max_c);
         fscanf(fit,  "%d", &p->max_errors);
 
@@ -23,7 +23,7 @@ void carregar_dades(picross_t *p)
                {
                    for (j=0; j< p->max_c; j++)
                    {
-                       fscanf(fit, "%d", &p->taula[i][j]);
+                       fscanf(fit, "%d", &p->taula[i][j]);  //OBTÉ LA TAULA
                       // printf("%d ", p->taula[i][j]);
                    }
                }
@@ -40,33 +40,33 @@ void taula_adalt(picross_t *p)
             {
                 for (y=0; y<p->max_c; y++)
                 {
-                    p->taula1[x][y]= 0;
+                    p->taula1[x][y]= 0;      //OMPLIR LA TAULA DE 0s.
                 }
             }
 
             comptador=0;
-            x=0;  y=0;
+            y=0;
             for (j=0; j< p->max_c+1; j++)
             {
                // comptador=0;
                 x= p->n;
-                for (i=0; i<p->max_f+1; i++)
+                for (i=0; i<p->max_f+1; i++)   //BUCLE RECORRENT TOTA LA TAULA
                 {
-                    if(p->taula[i][j]==1)
+                    if(p->taula[i][j]==1)     //SI TROBA UN 1, AUGMENTA EL COMPATDOR
                     {
                         comptador++;
                     }
-                    else
+                    else                        //TROBA UN 0
                     {
-                        if (comptador!=0)
+                        if (comptador!=0)   //SI ABANS HI HAVIA UN 1, GUARDA EL COMPTADOR A LA TAULA DELS INDEXOS
                         {
                             p->taula1[x][y]= comptador;
-                            x--;
+                            x--;                //TORNA CAP ADALT
                             comptador=0;
                         }
                     }
                 }
-                y++;
+                y++; //CONTINUA CAP ABAIX
             }
             //PRINTEM ELS RESULTATS
 
@@ -96,7 +96,7 @@ void iniciar_taula_respostes(picross_t *p)
             {
                 for (int j=0; j< p->max_c+((p->n)+1); j++)
                 {
-                    p->taula_respostes[i][j]='X'; //omple tota la taula amb el caràcter X
+                    p->taula_respostes[i][j]='X';           //S'OMPLE DE X LA TAULA DE RESPOSTES, PODRIA SER ESPAIS O EL QUE VOLGUESSIM
                 }
 
             }
@@ -148,7 +148,7 @@ void imprimir_taula_respostes(picross_t *p)
              for (x=0; x<p->max_f; x++)
             {
                 j=0;
-                for ( y=0; y<p->max_c+p->n+1; y++)
+                for ( y=0; y<p->max_c+p->n+1; y++)          //RECORRE TAULA
                 {
                     if (p->taula2[x][y]!= 0)
                     {
@@ -174,21 +174,21 @@ void imprimir_taula_respostes(picross_t *p)
 
 void pregunta_posicio(picross_t *p)
 {
-    printf("\nTria una fila del 1 i al %d\n", p->max_f);
+    printf("\nTria una fila del 1 i al %d\n", p->max_f);                //PREGUNTA A L'USUARI
     scanf("%d", &p->fila);
     while ((p->fila<1)||(p->fila> p->max_f))
     {
-        printf("\nFila no valida, tria una fila del 1 i al %d\n", p->max_f);
+        printf("\nFila no valida, tria una fila del 1 i al %d\n", p->max_f);    //EL USUSARI TRIPEJA
         scanf("%d", &p->fila);
     }
 
-    p->fila= p->fila-1;
+    p->fila= p->fila-1;                                 // RECORDEM QUE 1 AQUI ES 0
 
     printf("\nTria una columna del 1 i al %d\n", p->max_c);
     scanf("%d", &p->columna);
     while ((p->columna<1)||(p->columna>p->max_c))
     {
-        printf("\nColumna no valida, tria una columna del 1 i al %d\n", p->max_c);
+        printf("\nColumna no valida, tria una columna del 1 i al %d\n", p->max_c);          //L'USUARI TORNA A TRIPEJAR
         scanf("%d", &p->columna);
     }
     p->columna= p->columna-1;
@@ -198,22 +198,22 @@ bool posicio_omplerta (picross_t *p)
 {
     bool omplert=false;
 
-    if ((p->taula_respostes[p->fila][p->columna]=='0') || (p->taula_respostes[p->fila][p->columna]=='1'))
+    if ((p->taula_respostes[p->fila][p->columna]=='0') || (p->taula_respostes[p->fila][p->columna]=='1')) //SI DETECTA UN 1 O UN 0, VOL DIR QUE ESTA PLENA
     {
         omplert=true;
     }
 
-    return omplert;
+    return omplert; //RETORNA EL QUE PASSA
 }
 
 void pregunta_resposta(picross_t *p)
 {
 
-    printf("\nEscriu la teva resposta\n");
+    printf("\nEscriu la teva resposta\n"); //DEMANA PER LA RESPOSTA
     scanf("%d", &p->resposta);
     while ((p->resposta!=0)&&(p->resposta!=1))
     {
-        printf("\nResposta no valida, recorda que la resposta nomes pot ser un 1 o un 0\n");
+        printf("\nResposta no valida, recorda que la resposta nomes pot ser un 1 o un 0\n");        //USUARI S'EQUIVOCA POSANT UN NUMERO DIFERENT A 0 || 1
         scanf("%d", &p->resposta);
     }
 }
@@ -224,8 +224,36 @@ bool resposta_ok(picross_t *p)
     if (p->resposta==p->taula[p->fila][p->columna])
     {
         correcte=true;
-        p->taula_respostes[p->fila][p->columna]= p->resposta+ '0';
+        p->taula_respostes[p->fila][p->columna]= p->resposta+ '0';          //LA RESPOSTA COINCIDEIX
 
     }
     return correcte;
+}
+bool finalitza(int encerts, int errors, picross_t p)
+{
+    bool r;
+    r=false;
+    if((errors>=p.max_errors)||(encerts==p.max_f*p.max_c)) //ACABA EL BUCLE
+    {
+        r=true;
+    }
+    if (errors==p.max_errors) //ET FA LA BRONCA
+    {
+        printf("\nGame over!\n");
+    }
+    else if((encerts==p.max_f*p.max_c)) //ET FELICITA
+    {
+        printf("Joc completat!\n");
+        for(int i=0; i<p.max_f; i++)
+        {
+            for(int j=0; j<p.max_c; j++)
+            {
+                printf("%d ", p.taula[i][j]);
+            }
+            printf("\n");
+        }
+
+    }
+    return r; //RETORNA SI FINALITZA O NO
+
 }
