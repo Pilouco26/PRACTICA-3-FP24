@@ -89,7 +89,6 @@ void taula_adalt(picross_t *p)
                     }
                 }
              }
-
 }
 void iniciar_taula_respostes(picross_t *p)
 {
@@ -104,39 +103,7 @@ void iniciar_taula_respostes(picross_t *p)
 }
 void fer_taula(picross_t *p)
 {
-            printf("\n");
-            int i,j;
-            i=0;
-             for (int x=0; x<p->max_f; x++)
-            {
-                j=0;
-                for (int y=0; y<p->max_c+p->n+1; y++)
-                {
-                    if (p->taula2[x][y]!= 0)
-                    {
-                        if(y< p->n)
-                        {
-                           printf ("%d", p->taula2[x][y]);
-                        }
-                    }
-                     else
-                    {
-                        printf(" ");
-                        if(y> p->n)
-                        {
-                            printf("%c", p->taula_respostes[i][j]);
-                            j++;
-                        }
-                    }
-                }
-                printf("\n");
-            i++;
-            }
-
-}
-void imprimir_taula_respostes(picross_t *p)
-{
-        //GUARDEM ZEROS A LA TAULA//
+    //GUARDEM ZEROS A LA TAULA//
         int x, y, i, j, comptador;
               for ( x=0; x< p->max_f; x++)
             {
@@ -171,11 +138,14 @@ void imprimir_taula_respostes(picross_t *p)
                 }
                 x++;
             }
-             printf("\n");
+}
+void imprimir_taula_respostes(picross_t *p)
+{
 
-/*
-             i=0;
-             for ( x=0; x<p->max_f; x++)
+            int i,j,x,y;
+            printf("\n");
+            i=0;
+             for (x=0; x<p->max_f; x++)
             {
                 j=0;
                 for ( y=0; y<p->max_c+p->n+1; y++)
@@ -183,25 +153,23 @@ void imprimir_taula_respostes(picross_t *p)
                     if (p->taula2[x][y]!= 0)
                     {
                         if(y< p->n)
-                       {
+                        {
                            printf ("%d", p->taula2[x][y]);
-                       }
+                        }
                     }
                      else
-
+                    {
+                        printf(" ");
+                        if(y> p->n)
                         {
-                            printf(" ");
-                             if(y> p->n)
-                            {
-                                printf("%c", p->taula_respostes[i][j]);
-                            }
+                            printf("%c", p->taula_respostes[i][j]);
+                            j++;
                         }
+                    }
                 }
-                j++;
                 printf("\n");
-
+            i++;
             }
-            i++;*/
 }
 
 void pregunta_posicio(picross_t *p)

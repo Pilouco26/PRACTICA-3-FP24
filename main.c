@@ -13,16 +13,16 @@ int main()
     carregar_dades(&p);
     taula_adalt(&p);
     iniciar_taula_respostes(&p);
-    imprimir_taula_respostes(&p);
     fer_taula(&p);
+    imprimir_taula_respostes(&p);
+
     printf("\nTenint en compte que la primera fila correspon al numero 1, i que la primera columna correspon tambe al numero 1.\n");
 
 
     while((errors<p.max_errors)&&(encerts<p.max_f*p.max_c))
     {
         taula_adalt(&p);
-        //imprimir_taula_respostes(&p);
-        fer_taula(&p);
+        imprimir_taula_respostes(&p);
         pregunta_posicio(&p);
         while (posicio_omplerta(&p)==true)
         {
