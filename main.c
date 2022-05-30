@@ -7,60 +7,28 @@ int main()
 {
 
     picross_t p;
-    int encerts=0;
-    int errors=0;
     printf("\nBenvingut al joc del Picross:\n");
     carregar_dades(&p);
-    taula_adalt(&p);
     iniciar_taula_respostes(&p);
     fer_taula(&p);
-    imprimir_taula_respostes(&p);
 
     printf("\nTenint en compte que la primera fila correspon al numero 1, i que la primera columna correspon tambe al numero 1.\n");
 
 
-    while((errors<p.max_errors)&&(encerts<p.max_f*p.max_c))
+    while(!finalitza(p.encerts, p.errors, p))
     {
         taula_adalt(&p);
         imprimir_taula_respostes(&p);
         pregunta_posicio(&p);
-        while (posicio_omplerta(&p)==true)
+        while (posicio_omplerta(&p))
         {
             printf("\nAquesta posicio ja l'has omplert, torna a triar la posicio\n");
             pregunta_posicio(&p);
         }
 
         pregunta_resposta(&p);
-
-        if (resposta_ok(&p)==true)
-        {
-            printf("\nCorrecte\n");
-            encerts++;
-        }
-        else
-        {
-            printf("\nError\n");
-            errors++;
-        }
+        actualizar_joc(&p);
     }
-
-    if (errors==p.max_errors)
-    {
-        printf("\nGame over!\n");
-    }
-    else
-    {
-        printf("Joc completat!\n");
-        for(int i=0; i<p.max_f; i++)
-        {
-            for(int j=0; j<p.max_c; j++)
-            {
-                printf("%d ", p.taula[i][j]);
-            }
-            printf("\n");
-        }
-    }
-
 
     return 0;
 }
