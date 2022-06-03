@@ -16,6 +16,8 @@ typedef struct
     int columna;
     int resposta;
     char taula_respostes[MAX][MAX];
+    int errors;
+    int encerts;
 
 } picross_t;
 
@@ -32,3 +34,7 @@ bool posicio_omplerta (picross_t *p);
 bool resposta_ok(picross_t *p);
 
 void pregunta_resposta(picross_t *p);
+
+bool finalitza(int encerts, int errors, picross_t p);
+
+void actualizar_joc(picross_t *p);
